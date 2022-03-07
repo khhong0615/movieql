@@ -1,49 +1,18 @@
-let Movies = [
-    {    
-        id:0,
-        name: "더 배트맨",
-        score: 8,
-    },
-    {    
-        id:1,
-        name: "화양연화",
-        score: 8,
-    },
-    {   id:2, 
-        name: "언차티드",
-        score: 5,
-    },
-    {   id:3, 
-        name: "해적",
-        score: 5,
+import fetch from "node-fetch";
+const API_URL = "https://yts.mx/api/v2/list_movies.json"
+
+export const getMovies = (limit, rating) =>{
+    let REQUEST_URL = API_URL;
+    if(limit > 0) {
+        REQUEST_URL += `?limit=${limit}`
     }
-];
-
-export const getMovie = () => Movies;
-
-export const getById = id => {
-    const filteredMovies = Movies.filter(Movies => id === Movies.id);
-    return filteredMovies[0];
+    if(rating > 0) {
+        REQUEST_URL += `&minimum_rating=${rating}`
+    }
+         
+    return fetch(REQUEST_URL)
+        .then(res => res.json())
+        .then(json => json.data.movies)
 }
 
-export const deleteMovie = id => {
-    const cleanedMovies = Movies.filter(Movies => Movies.id !== id);
-    if(Movies.length > cleanedMovies.length) {
-        Movies = cleanedMovies
-        return true;
-    }
-    else {
-        return false;
-    }
-}
 
-export const addMovie = (name,score) => {
-    const newMovie ={
-        id: `${Movies.length}`,
-        name,
-        score
-    };
-    Movies.push(newMovie);
-    return newMovie;
-
-}
